@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "task-app",
-    "slug": "task-app",
+    "slug": "to-do-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.gabriellgon.taskapp"
     },
     "web": {
       "output": "static",
@@ -37,6 +38,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b7a73a38-2e8a-4c11-bdb0-44bab9ce90e0"
+      }
+    },
+    "owner": "gabriellgons-team"
   }
 }
