@@ -1,15 +1,36 @@
-import * as Device from 'expo-device';
-import { Text, View, StyleSheet, Platform } from "react-native";
-import { globalStyles } from '@/styles/global';
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, View, FlatList, ScrollView } from "react-native";
+import FloatingBar from "../components/FloatingBar";
+import TaskGrid from "@/components/TaskGrid";
+import TaskSection from "@/components/TaskSection";
 
 export default function Index() {
   return (
-    <View style={globalStyles.container}>
-      <Text style={globalStyles.title}>Task App</Text>
-      <Text>Running on: {Platform.OS}</Text>
-      <Text>Device model: {Device.modelName}</Text>
-      <Text>Device brand: {Device.brand}</Text>
-      <Text>OS version: {Device.osVersion}</Text>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView>
+        <ScrollView>
+          {/* <FloatingBar /> */}
+          <TaskGrid />
+          <TaskSection />
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 12,
+    gap: 16,
+  },
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
