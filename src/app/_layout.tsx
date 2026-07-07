@@ -1,6 +1,10 @@
 import { Stack } from "expo-router";
-import { HeaderTitle } from "expo-router/build/react-navigation";
 
 export default function RootLayout() {
-  return <Stack screenOptions={{headerShown: false}}/>;
+  return (
+    <Stack >
+      <Stack.Screen options={{ headerShown: false }} name="index" />
+      <Stack.Screen options={{ title: 'New Task' }} name="task" />
+    </Stack>
+  );
 }

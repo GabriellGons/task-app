@@ -1,6 +1,6 @@
-import { Checkbox, Host } from '@expo/ui';
-import { useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { Checkbox, Host } from "@expo/ui";
+import { useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 type TaskListProps = {
   name: string;
@@ -47,23 +47,68 @@ export default function TaskList() {
       start: "07-06-2025",
       end: "07-07-2025",
     },
+    {
+      id: "6",
+      name: "task 6",
+      description: "description 6",
+      start: "07-06-2025",
+      end: "07-07-2025",
+    },
+    {
+      id: "7",
+      name: "task 7",
+      description: "description 7",
+      start: "07-06-2025",
+      end: "07-07-2025",
+    },
+    {
+      id: "8",
+      name: "task 8",
+      description: "description 8",
+      start: "07-06-2025",
+      end: "07-07-2025",
+    },
+    {
+      id: "9",
+      name: "task 9",
+      description: "description 9",
+      start: "07-06-2025",
+      end: "07-07-2025",
+    },
+    {
+      id: "10",
+      name: "task 10",
+      description: "description 10",
+      start: "07-06-2025",
+      end: "07-07-2025",
+    },
   ];
 
   return (
     <FlatList
       data={data}
       renderItem={({ item }) => (
-        <View style={styles.container}>
-          <Host>
-          <Checkbox value={accepted} onValueChange={setAccepted} />
+        <View
+          style={[
+            styles.container,
+            { flexDirection: "row", alignItems: "center" },
+          ]}
+        >
+          <Host style={{ marginLeft: 8 }}>
+            <Checkbox value={accepted} onValueChange={setAccepted} />
           </Host>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
+            style={{
+              flexDirection: "column",
+              justifyContent: "space-between",
+              flex: 1,
+              marginLeft: 28
+            }}
           >
             <Text style={styles.name}>{item.name}</Text>
-            <Text>{item.end}</Text>
+            <Text style={styles.description}>{item.description}</Text>
           </View>
-          <Text style={styles.description}>{item.description}</Text>
+          <Text>{item.end}</Text>
         </View>
       )}
       keyExtractor={(item) => item.id}
