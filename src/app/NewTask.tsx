@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 
-export default function TaskScreen() {
+export default function NewTaskScreen() {
     return (
         <View>
             <Text>disini nambah tugas</Text>

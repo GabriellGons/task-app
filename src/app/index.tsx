@@ -1,8 +1,8 @@
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native";
+import FloatingButton from "@/components/FloatingButton";
 import TaskGrid from "@/components/TaskGrid";
 import TaskSection from "@/components/TaskSection";
-import FloatingButton from "@/components/FloatingButton";
+import { ScrollView } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
