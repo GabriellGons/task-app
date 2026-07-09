@@ -1,16 +1,18 @@
-import { client } from "@/graphql/client";
-import { ApolloProvider } from "@apollo/client/react";
+// Langkah 3: Sesuaikan Penggunaan di src/app/_layout.tsx
+// Dengan memisahkan client ke berkas global, kode di src/app/_layout.tsx
+//  Anda menjadi sangat bersih dan rapi:
+
 import { router, Stack } from "expo-router";
-import { useEffect } from "react";
 import { Button } from "react-native";
 import { AuthProvider, useAuth } from "../../context/AuthContext";
+import { useEffect } from "react";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "../graphql/client"; // Import client global yang sudah dibuat
 
 function RootLayoutNav() {
   const { authState, onLogout } = useAuth();
 
   useEffect(() => {
-    console.log(authState?.authenticated);
-
     if (authState?.authenticated === false) {
       router.replace("/SignIn");
     } else {
@@ -36,10 +38,11 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   return (
-    <ApolloProvider client={client}>
-      <AuthProvider>
+    <AuthProvider>
+      {/* Bungkus seluruh aplikasi dengan ApolloProvider */}
+      <ApolloProvider client={client}>
         <RootLayoutNav />
-      </AuthProvider>
-    </ApolloProvider>
+      </ApolloProvider>
+    </AuthProvider>
   );
 }
