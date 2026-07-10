@@ -42,7 +42,7 @@ export default function SignInScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
+      
         <View style={{justifyContent: "center", alignItems: "center"}}>
           <TextInput
             placeholder="name@gmail.com"
@@ -62,7 +62,7 @@ export default function SignInScreen() {
             <Text>Sign In</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      
     </SafeAreaProvider>
   );
 }

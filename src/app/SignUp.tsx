@@ -18,7 +18,7 @@ export default function SignUpScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
+     
         <View>
           <TextInput
             placeholder="name@gmail.com"
@@ -38,7 +38,7 @@ export default function SignUpScreen() {
             <Text>Sign Up</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      
     </SafeAreaProvider>
   );
 }

@@ -85,10 +85,10 @@ export default function TaskList() {
   ];
 
   return (
-    <FlatList
-      data={data}
-      renderItem={({ item }) => (
+    <View>
+      {data.map((item) => (
         <View
+          key={item.id}
           style={[
             styles.container,
             { flexDirection: "row", alignItems: "center" },
@@ -110,9 +110,8 @@ export default function TaskList() {
           </View>
           <Text>{item.end}</Text>
         </View>
-      )}
-      keyExtractor={(item) => item.id}
-    ></FlatList>
+      ))}
+    </View>
   );
 }
 

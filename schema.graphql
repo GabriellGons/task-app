@@ -1,0 +1,37 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Mutation {
+  createTask(description: String, endAt: String, startedAt: String, title: String!): TaskResponse!
+  deleteTask(id: ID!): TaskResponse!
+  toggleTaskCompletion(id: ID!): TaskResponse!
+  updateTask(description: String, endAt: String, id: ID!, startedAt: String, title: String!): TaskResponse!
+}
+
+type Query {
+  getTasks: TasksResponse!
+}
+
+type Task {
+  createdAt: String
+  description: String
+  endAt: String
+  id: ID!
+  isDone: Boolean!
+  startedAt: String
+  title: String!
+  updatedAt: String
+  userId: ID!
+}
+
+type TaskResponse {
+  message: String!
+  task: Task
+}
+
+type TasksResponse {
+  message: String!
+  task: [Task]
+}

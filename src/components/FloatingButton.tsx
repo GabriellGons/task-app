@@ -8,7 +8,7 @@ export default function FloatingButton() {
     <View style={style.container}>
       <TouchableOpacity
         style={style.contentContainer}
-        onPress={() => router.push("/Task")}
+        onPress={() => router.push("/NewTask")}
       >
         <View style={style.iconContainer}>
           <Image

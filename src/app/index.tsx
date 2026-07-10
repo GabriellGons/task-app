@@ -1,22 +1,23 @@
 import FloatingButton from "@/components/FloatingButton";
 import TaskGrid from "@/components/TaskGrid";
 import TaskSection from "@/components/TaskSection";
-import { GET_TASK } from "@/graphql/queries";
 import { useQuery } from "@apollo/client/react";
-import { useEffect } from "react";
-import { ScrollView, View, ActivityIndicator, Text } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, Text, View, ScrollView } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GET_TASK } from "../graphql/queries";
 
 export default function Index() {
   const { loading, error, data } = useQuery(GET_TASK);
 
-  useEffect(() => {
-    if (data) {
-      console.log("ini datanya:", data);
-    } else if (error) {
-      console.log("ini errornya:", error);
-    }
-  }, [data, error]);
+  console.log("data: ", data?.getTasks);
+
+  // useEffect(() => {
+  //   if (data) {
+  //     console.log("ini datanya:",data.getTasks.task);
+  //   } else if (error) {
+  //     console.log("ini errornya:", error);
+  //   }
+  // }, [data, error]);
 
   if (loading) {
     return (
@@ -37,13 +38,11 @@ export default function Index() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <ScrollView>
-          <TaskGrid />
-          <TaskSection />
-        </ScrollView>
-        <FloatingButton />
-      </SafeAreaView>
+      <ScrollView>
+        <TaskGrid />
+        <TaskSection />
+      </ScrollView>
+      <FloatingButton />
     </SafeAreaProvider>
   );
 }
