@@ -2,14 +2,12 @@ import FloatingButton from "@/components/FloatingButton";
 import TaskGrid from "@/components/TaskGrid";
 import TaskSection from "@/components/TaskSection";
 import { useQuery } from "@apollo/client/react";
-import { ActivityIndicator, Text, View, ScrollView } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GET_TASK } from "../graphql/queries";
 
 export default function Index() {
   const { loading, error, data } = useQuery(GET_TASK);
-
-  console.log("data: ", data?.getTasks);
 
   // useEffect(() => {
   //   if (data) {
@@ -39,8 +37,7 @@ export default function Index() {
   return (
     <SafeAreaProvider>
       <ScrollView>
-        <TaskGrid />
-        <TaskSection />
+        <TaskSection tasks={data?.getTasks?.task || []} />
       </ScrollView>
       <FloatingButton />
     </SafeAreaProvider>

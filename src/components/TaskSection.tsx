@@ -1,11 +1,13 @@
-import { Text, View, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import TaskList from "./TaskList";
+import { Task } from "@/types/task";
 
-export default function TaskSection() {
+
+export default function TaskSection({ tasks }: { tasks: Task[] }) {
   return (
     <View style={styles.section}>
       <Text style={styles.title}>All My Tasks</Text>
-      <TaskList />
+      <TaskList tasks={tasks} />
     </View>
   );
 }

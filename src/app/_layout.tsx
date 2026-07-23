@@ -9,8 +9,6 @@ function RootLayoutNav() {
   const { authState, onLogout } = useAuth();
 
   useEffect(() => {
-    console.log(authState?.authenticated);
-
     if (authState?.authenticated === false) {
       router.replace("/SignIn");
     } else {
@@ -20,16 +18,15 @@ function RootLayoutNav() {
 
   return (
     <Stack>
-      {authState?.authenticated ? (
-        <Stack.Screen
-          options={{
-            headerRight: () => <Button onPress={onLogout} title="Sign Out" />,
-          }}
-          name="index"
-        />
-      ) : (
-        <Stack.Screen options={{ headerShown: false }} name="SignIn" />
-      )}
+      <Stack.Screen
+        options={{
+          headerTitle: "Task App",
+          headerRight: () => <Button onPress={onLogout} title="Sign Out" />,
+        }}
+        name="index"
+      />
+      <Stack.Screen options={{ headerShown: false }} name="SignIn" />
+      <Stack.Screen options={{ headerShown: false }} name="SignUp" />
     </Stack>
   );
 }

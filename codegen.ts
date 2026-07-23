@@ -13,10 +13,10 @@ const config: CodegenConfig = {
       },
     },
   ],
-  documents: ["src/**/*.{ts,tsx}"],
-  ignoreNoDocuments: true,
+  documents: ["src/graphql/queries.ts"],
+  ignoreNoDocuments: false,
   generates: {
-    "./src/graphql/": {
+    "./src/graphql/__generated__/": {
       preset: "client",
     },
     "./schema.graphql": {

@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthProp {
   authState?: { token: string | null; authenticated: boolean | null };
-  onSignUp?: (email: string, password: string) => Promise<any>;
+  onSignUp?: (name: string, email: string, password: string) => Promise<any>;
   onSignIn?: (email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
 }
@@ -42,9 +42,10 @@ export const AuthProvider = ({ children }: any) => {
     loadToken();
   }, []);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (name:string, email: string, password: string) => {
     try {
       return await axios.post(`${API_URL}/api/auth/register`, {
+        name,
         email,
         password,
       });

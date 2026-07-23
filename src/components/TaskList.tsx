@@ -1,98 +1,34 @@
 import { Checkbox, Host } from "@expo/ui";
 import { useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Task } from "@/types/task";
+import { router } from "expo-router";
+import { formatEpochToString } from "@/utils/date";
 
-type TaskListProps = {
-  name: string;
-  description: string;
-  start: string;
-  end: string;
-};
-
-export default function TaskList() {
+export default function TaskList({ tasks }: { tasks: Task[] }) {
   const [accepted, setAccepted] = useState(false);
-  const data = [
-    {
-      id: "1",
-      name: "task 1",
-      description: "description 1",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "2",
-      name: "task 2",
-      description: "description 2",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "3",
-      name: "task 3",
-      description: "description 3",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "4",
-      name: "task 4",
-      description: "description 4",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "5",
-      name: "task 5",
-      description: "description 5",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "6",
-      name: "task 6",
-      description: "description 6",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "7",
-      name: "task 7",
-      description: "description 7",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "8",
-      name: "task 8",
-      description: "description 8",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "9",
-      name: "task 9",
-      description: "description 9",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-    {
-      id: "10",
-      name: "task 10",
-      description: "description 10",
-      start: "07-06-2025",
-      end: "07-07-2025",
-    },
-  ];
 
   return (
     <View>
-      {data.map((item) => (
-        <View
+      {tasks.map((item) => item && (
+        <TouchableOpacity
           key={item.id}
           style={[
             styles.container,
             { flexDirection: "row", alignItems: "center" },
           ]}
+          onPress={() => {
+            router.push({
+              pathname: "/NewTask",
+              params: {
+                id: item.id,
+                title: item.title,
+                description: item.description,
+                startedAt: formatEpochToString(item.startedAt, true),
+                endAt: formatEpochToString(item.endAt, true),
+              },
+            })
+          }}
         >
           <Host style={{ marginLeft: 8 }}>
             <Checkbox value={accepted} onValueChange={setAccepted} />
@@ -102,14 +38,13 @@ export default function TaskList() {
               flexDirection: "column",
               justifyContent: "space-between",
               flex: 1,
-              marginLeft: 28
+              marginLeft: 28,
             }}
           >
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.description}>{item.description}</Text>
+            <Text style={styles.name}>{item.title}</Text>
+            <Text>{formatEpochToString(item.endAt, true)}</Text>
           </View>
-          <Text>{item.end}</Text>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );

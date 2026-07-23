@@ -8,42 +8,33 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../context/AuthContext";
+import { router } from "expo-router";
 
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { onSignIn, onSignUp } = useAuth();
+  const { onSignIn } = useAuth();
 
   const signIn = async () => {
+    const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
+    
+    if (!passwordRegex.test(password)) {
+      alert("Password harus minimal 6 karakter dan hanya boleh berisi huruf atau angka!");
+      return;
+    }
+    
     const result = await onSignIn!(email, password);
     if (result?.error) {
-      console.log(email, password);
       alert(result.msg);
     } else {
       alert("Login successfully");
     }
   };
 
-  const signUp = async () => {
-    const result = await onSignUp!(email, password);
-    if (result?.error) {
-      alert(result.msg);
-    } else {
-      alert("slebew");
-    }
-  };
-
-  const [authData, setAuthData] = useState<{ email: string; password: string }>(
-    {
-      email: "",
-      password: "",
-    },
-  );
-
   return (
     <SafeAreaProvider>
-      
-        <View style={{justifyContent: "center", alignItems: "center"}}>
+      <SafeAreaView>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <TextInput
             placeholder="name@gmail.com"
             style={styles.textInput}
@@ -61,8 +52,11 @@ export default function SignInScreen() {
           <TouchableOpacity onPress={signIn}>
             <Text>Sign In</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={{marginTop:16}} onPress={signIn}>
+            <Text onPress={() => router.push("/SignUp")}>Make An Account</Text>
+          </TouchableOpacity>
         </View>
-      
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }

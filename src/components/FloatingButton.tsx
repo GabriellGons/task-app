@@ -1,8 +1,7 @@
-import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 export default function FloatingButton() {
-  const router = useRouter();
 
   return (
     <View style={style.container}>
