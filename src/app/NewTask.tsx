@@ -1,7 +1,13 @@
-import { CREATE_TASK, GET_TASK, UPDATE_TASK } from "@/graphql/queries";
+import {
+  CREATE_TASK,
+  GET_TASK,
+  UPDATE_TASK,
+  DELETE_TASK,
+} from "@/graphql/queries";
+import { formatEpochToString } from "@/utils/date";
 import { useMutation } from "@apollo/client/react";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -25,6 +31,7 @@ export default function NewTaskScreen() {
   const [activeField, setActiveField] = useState<"startedAt" | "endAt" | null>(
     null,
   );
+
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -32,9 +39,14 @@ export default function NewTaskScreen() {
   const openDatePicker = (field: "startedAt" | "endAt") => {
     setActiveField(field);
     const currentValue = getValues(field);
-    
+
     if (currentValue) {
-      setDate(new Date(currentValue));
+      const parsed = Number(currentValue);
+      setDate(
+        !isNaN(parsed) && currentValue.trim() !== ""
+          ? new Date(parsed)
+          : new Date(currentValue),
+      );
     } else {
       setDate(new Date());
     }
@@ -50,7 +62,6 @@ export default function NewTaskScreen() {
         setShowPicker(false);
         setShowTimePicker(true);
       }
-
     } else {
       setShowPicker(false);
       setActiveField(null);
@@ -75,7 +86,6 @@ export default function NewTaskScreen() {
         setShowTimePicker(false);
         setActiveField(null);
       }
-
     } else {
       setShowTimePicker(false);
       setActiveField(null);
@@ -105,14 +115,17 @@ export default function NewTaskScreen() {
     },
   });
 
-  const [createTask, { loading, error }] = useMutation(CREATE_TASK, {
+  const [createTask, { loading: loadingCreate }] = useMutation(CREATE_TASK, {
     refetchQueries: [{ query: GET_TASK }],
   });
 
-  const [updateTask, { loading: loadingUpdate, error: errorUpdate }] =
-    useMutation(UPDATE_TASK, {
-      refetchQueries: [{ query: GET_TASK }],
-    });
+  const [deleteTask, { loading: loadingDelete }] = useMutation(DELETE_TASK, {
+    refetchQueries: [{ query: GET_TASK }],
+  });
+
+  const [updateTask, { loading: loadingUpdate }] = useMutation(UPDATE_TASK, {
+    refetchQueries: [{ query: GET_TASK }],
+  });
 
   const onSubmit = async (data: TaskFormData) => {
     try {
@@ -145,91 +158,145 @@ export default function NewTaskScreen() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!params.id) return;
+    try {
+      const response = await deleteTask({
+        variables: { id: params.id },
+      });
+      console.log("Tugas berhasil dihapus:", response.data);
+      router.back();
+    } catch (err) {
+      console.error("Gagal menghapus tugas:", err);
+    }
+  };
+
   return (
-    <View>
-      <Controller
-        control={control}
-        rules={{
-          required: true,
+    <>
+      <Stack.Screen
+        options={{
+          headerTitle: params.id ? "Edit Task" : "New Task",
+          headerRight: params.id
+            ? () => (
+                <Pressable
+                  onPress={handleDelete}
+                  disabled={loadingDelete}
+                  style={{
+                    backgroundColor: "#ff4d4f",
+                    padding: 8,
+                    borderRadius: 6,
+                    opacity: loadingDelete ? 0.6 : 1,
+                  }}
+                >
+                  <Text
+                    style={{ color: "white", fontSize: 14, fontWeight: "600" }}
+                  >
+                    {loadingDelete ? "Deleting..." : "Delete"}
+                  </Text>
+                </Pressable>
+              )
+            : undefined,
         }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Title"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+      />
+      <View style={{ padding: 16 }}>
+        <Text style={{ fontWeight: "bold" }}>Task Name</Text>
+        <View style={{ paddingBottom: 10 }}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={{ padding: 0 }}
+                placeholder="Title"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="title"
+          />
+        </View>
+        {errors.title && <Text>This is required.</Text>}
+
+        <Text style={{ fontWeight: "bold" }}>Task Description</Text>
+        <View style={{ paddingBottom: 10 }}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={{ padding: 0 }}
+                placeholder="Description"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="description"
+          />
+        </View>
+        {errors.description && <Text>This is required.</Text>}
+
+        {showPicker && (
+          <DateTimePicker
+            mode="date"
+            display="spinner"
+            value={date}
+            is24Hour={true}
+            onChange={onChangeDatePicker}
           />
         )}
-        name="title"
-      />
-      {errors.title && <Text>This is required.</Text>}
-
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Description"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+        {showTimePicker && (
+          <DateTimePicker
+            mode="time"
+            display="spinner"
+            value={date}
+            is24Hour={true}
+            onChange={onChangeTimePicker}
           />
         )}
-        name="description"
-      />
-      {errors.description && <Text>This is required.</Text>}
+        <Text style={{ fontWeight: "bold" }}>Start At</Text>
+        <Pressable style={{ paddingBottom: 10 }} onPress={() => openDatePicker("startedAt")}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { value } }) => (
+              <Text>
+                {value ? formatEpochToString(value, true) : "Waktu Mulai"}
+              </Text>
+            )}
+            name="startedAt"
+          />
+        </Pressable>
 
-      {showPicker && (
-        <DateTimePicker
-          mode="date"
-          display="spinner"
-          value={date}
-          is24Hour={true}
-          onChange={onChangeDatePicker}
+        <Text style={{ fontWeight: "bold"}}>End At</Text>
+        <Pressable style={{ paddingBottom: 10 }} onPress={() => openDatePicker("endAt")}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { value } }) => (
+              <Text>
+                {value ? formatEpochToString(value, true) : "Waktu Selesai"}
+              </Text>
+            )}
+            name="endAt"
+          />
+        </Pressable>
+        {errors.endAt && <Text>This is required.</Text>}
+        <Button
+          title={loadingCreate || loadingUpdate ? "Menyimpan..." : "Submit"}
+          disabled={loadingCreate || loadingUpdate}
+          onPress={handleSubmit(onSubmit)}
         />
-      )}
-      {showTimePicker && (
-        <DateTimePicker
-          mode="time"
-          display="spinner"
-          value={date}
-          is24Hour={true}
-          onChange={onChangeTimePicker}
-        />
-      )}
-      <Pressable onPress={() => openDatePicker("startedAt")}>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { value } }) => (
-            <Text>{value ? value : "Waktu Mulai"}</Text>
-          )}
-          name="startedAt"
-        />
-      </Pressable>
-
-      <Pressable onPress={() => openDatePicker("endAt")}>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { value } }) => (
-            <Text>{value ? value : "Waktu Selesai"}</Text>
-          )}
-          name="endAt"
-        />
-      </Pressable>
-      {errors.endAt && <Text>This is required.</Text>}
-      <Button
-        title={loading || loadingUpdate ? "Menyimpan..." : "Submit"}
-        disabled={loading || loadingUpdate}
-        onPress={handleSubmit(onSubmit)}
-      />
-    </View>
+      </View>
+    </>
   );
 }

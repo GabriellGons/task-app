@@ -4,7 +4,19 @@ export const formatEpochToString = (
 ): string => {
   if (!epoch) return "-";
 
-  const epochNumber = typeof epoch === 'string' ? Number(epoch) : epoch;
+  let dateObj: Date;
+  if (typeof epoch === "number") {
+    dateObj = new Date(epoch);
+  } else {
+    const parsed = Number(epoch);
+    if (!isNaN(parsed) && epoch.trim() !== "") {
+      dateObj = new Date(parsed);
+    } else {
+      dateObj = new Date(epoch);
+    }
+  }
+
+  if (isNaN(dateObj.getTime())) return "-";
 
   const options: Intl.DateTimeFormatOptions = {
     day: "numeric",
@@ -17,5 +29,5 @@ export const formatEpochToString = (
     options.minute = "2-digit";
   }
 
-  return new Intl.DateTimeFormat("id-ID", options).format(epochNumber);
+  return new Intl.DateTimeFormat("id-ID", options).format(dateObj);
 };

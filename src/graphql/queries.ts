@@ -97,5 +97,41 @@ export const UPDATE_TASK = graphql(`
     }
   }
 `);
-// Anda bisa menambahkan query lain di bawah ini, contoh:
-// export const GET_TASKS = gql` ... `;
+
+export const DELETE_TASK = graphql(`
+  mutation DeleteTask($id: ID!) {
+    deleteTask(id: $id) {
+      message
+      task {
+        id
+        title
+        description
+        isDone
+        userId
+        startedAt
+        endAt
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`);
+
+export const TOGGLE_TASK_COMPLETION = graphql(`
+  mutation ToggleTaskCompletion($id: ID!) {
+    toggleTaskCompletion(id: $id) {
+      message
+      task {
+        id
+        title
+        description
+        isDone
+        userId
+        startedAt
+        endAt
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`);
